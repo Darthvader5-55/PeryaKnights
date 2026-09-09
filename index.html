@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perya Knights</title>
+<style>
+  :root{
+    --bg:#1a0f08; --bg2:#2b1710; --panel:#241209ee;
+    --gold:#f5a623; --gold-bright:#ffc857; --pink:#e8547b;
+    --text:#f5ead9; --text-dim:#c9b7a3; --line:#5a3a22;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; overflow-x:hidden; position:relative;
+    background:radial-gradient(ellipse at top, #3a1f12 0%, var(--bg) 60%);
+    color:var(--text); font-family:'Trebuchet MS', 'Segoe UI', sans-serif;
+    line-height:1.6;
+  }
+
+  /* ---------- floating dice background layer ---------- */
+  #dice-field{
+    position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+  }
+  .fdie{
+    position:absolute; width:34px; height:34px; opacity:0.55;
+    transform-style:preserve-3d;
+    animation:drift linear infinite, spin3d linear infinite;
+    filter:drop-shadow(0 4px 8px #00000066);
+  }
+  .fdie .face{
+    position:absolute; inset:0; background:linear-gradient(145deg,#3a2010,#1e1006);
+    border:2px solid var(--gold); border-radius:6px;
+    display:grid; place-items:center; box-shadow:inset 0 0 8px #00000088;
+  }
+  .fdie .pip{width:5px; height:5px; border-radius:50%; background:var(--gold-bright);}
+  .fdie .f1{transform:translateZ(17px);}
+  .fdie .f2{transform:rotateY(180deg) translateZ(17px);}
+  .fdie .f3{transform:rotateY(90deg) translateZ(17px);}
+  .fdie .f4{transform:rotateY(-90deg) translateZ(17px);}
+  .fdie .f5{transform:rotateX(90deg) translateZ(17px);}
+  .fdie .f6{transform:rotateX(-90deg) translateZ(17px);}
+
+  @keyframes drift{
+    0%{transform:translateY(110vh) translateX(0);}
+    100%{transform:translateY(-15vh) translateX(var(--drift,40px));}
+  }
+  @keyframes spin3d{
+    0%{rotate:x 0deg y 0deg z 0deg;}
+    100%{rotate:x 360deg y 360deg z 180deg;}
+  }
+  /* rotate shorthand unsupported everywhere -> fallback handled via extra transform wrapper */
+  .fdie-inner{width:100%; height:100%; transform-style:preserve-3d; animation:spinfallback 9s linear infinite;}
+  @keyframes spinfallback{
+    from{transform:rotateX(0) rotateY(0);}
+    to{transform:rotateX(360deg) rotateY(360deg);}
+  }
+
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px 60px; position:relative; z-index:1;}
+
+  /* ---------- header / hero ---------- */
+  header{
+    position:relative; text-align:center; padding:56px 20px 32px; overflow:hidden;
+    border-bottom:3px solid var(--line);
+    background:linear-gradient(180deg, #2b1710 0%, transparent 100%);
+  }
+  .lights{
+    position:absolute; top:0; left:0; right:0; height:6px; display:flex; justify-content:space-around;
+  }
+  .lights span{
+    width:8px; height:8px; border-radius:50%; margin-top:6px;
+    background:var(--gold-bright); box-shadow:0 0 10px 3px var(--gold-bright);
+    animation:twinkle 1.6s ease-in-out infinite;
+  }
+  .lights span:nth-child(odd){animation-delay:.4s; background:var(--pink); box-shadow:0 0 10px 3px var(--pink);}
+  .lights span:nth-child(3n){animation-delay:.8s;}
+  @keyframes twinkle{0%,100%{opacity:.3; transform:scale(0.8);} 50%{opacity:1; transform:scale(1.2);}}
+
+  .hero-die{
+    width:70px; height:70px; margin:0 auto 10px; perspective:600px;
+  }
+  .hero-die-inner{
+    width:100%; height:100%; position:relative; transform-style:preserve-3d;
+    animation:heroSpin 7s linear infinite;
+  }
+  .hero-die-inner .face{
+    position:absolute; inset:0; background:linear-gradient(145deg,#ffdf91,#f5a623);
+    border:2px solid #7a4c14; border-radius:10px; display:grid; place-items:center;
+    box-shadow:inset 0 0 10px #00000055, 0 0 18px #f5a62366;
+  }
+  .hero-die-inner .pips{display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); width:70%; height:70%;}
+  .hero-die-inner .pip{width:9px; height:9px; border-radius:50%; background:#3a2010; align-self:center; justify-self:center;}
+  .hero-die-inner .f1{transform:translateZ(35px);}
+  .hero-die-inner .f2{transform:rotateY(180deg) translateZ(35px);}
+  .hero-die-inner .f3{transform:rotateY(90deg) translateZ(35px);}
+  .hero-die-inner .f4{transform:rotateY(-90deg) translateZ(35px);}
+  .hero-die-inner .f5{transform:rotateX(90deg) translateZ(35px);}
+  .hero-die-inner .f6{transform:rotateX(-90deg) translateZ(35px);}
+  @keyframes heroSpin{
+    0%{transform:rotateX(0deg) rotateY(0deg);}
+    100%{transform:rotateX(360deg) rotateY(360deg);}
+  }
+
+  header img.logo{
+    width:150px; height:150px; border-radius:50%;
+    box-shadow:0 0 40px #f5a62366, 0 0 0 4px var(--gold);
+    transition:transform .25s ease, box-shadow .25s ease;
+    will-change:transform;
+  }
+  header img.logo:hover{
+    transform:scale(1.06) rotate(-2deg);
+    box-shadow:0 0 60px #f5a623aa, 0 0 0 4px var(--gold-bright);
+  }
+
+  h1{
+    font-size:2.6em; margin:20px 0 6px; letter-spacing:2px;
+    color:var(--gold-bright); text-transform:uppercase;
+    animation:glowPulse 3s ease-in-out infinite;
+  }
+  @keyframes glowPulse{
+    0%,100%{text-shadow:0 0 14px #f5a62366, 0 0 2px #fff2;}
+    50%{text-shadow:0 0 30px #f5a623cc, 0 0 10px #ffc85799;}
+  }
+  .tagline{color:var(--pink); letter-spacing:3px; font-size:0.95em; text-transform:uppercase;}
+
+  .cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:26px;}
+  .btn{
+    position:relative; overflow:hidden; display:inline-block; padding:14px 30px; border-radius:8px;
+    font-weight:bold; text-decoration:none; letter-spacing:1px; font-size:1em; border:2px solid transparent;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, #ffffffaa, transparent);
+    transform:skewX(-20deg); transition:left .5s ease;
+  }
+  .btn:hover::after{left:130%;}
+  .btn:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 8px 20px #00000055;}
+  .btn:active{transform:translateY(0) scale(0.98);}
+  .btn-primary{background:linear-gradient(180deg,var(--gold-bright),var(--gold)); color:#2b1710;}
+  .btn-secondary{background:transparent; border-color:var(--gold); color:var(--gold-bright);}
+
+  /* ---------- sections / reveal ---------- */
+  section{margin-top:44px; opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease;}
+  section.in{opacity:1; transform:translateY(0);}
+  h2{
+    color:var(--gold-bright); text-transform:uppercase; letter-spacing:2px; font-size:1.2em;
+    border-left:4px solid var(--pink); padding-left:12px; margin-bottom:14px;
+  }
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:26px;
+    transition:transform .2s ease, box-shadow .2s ease; will-change:transform;
+  }
+  .card:hover{box-shadow:0 14px 34px #00000066;}
+
+  .gallery{display:grid; grid-template-columns:1fr; gap:16px;}
+  .screenshot{
+    width:100%; border-radius:10px; border:3px solid var(--line); display:block; margin:0 auto;
+    box-shadow:0 10px 30px #00000066; transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .screenshot:hover{transform:scale(1.02) translateY(-4px); box-shadow:0 16px 40px #000000aa;}
+
+  .modes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:14px;}
+  .mode{
+    background:#2b1710; border:1px solid var(--line); border-radius:8px; padding:12px 16px;
+    transition:transform .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .mode:hover{transform:translateY(-4px); border-color:var(--gold-bright); background:#3a2410;}
+  .mode b{color:var(--gold-bright);}
+  .mode span{display:block; color:var(--text-dim); font-size:0.9em; margin-top:2px;}
+
+  table.dev{width:100%; border-collapse:collapse;}
+  table.dev td{padding:8px 6px; border-bottom:1px solid var(--line);}
+  table.dev td:first-child{color:var(--text-dim); width:140px;}
+
+  .note{
+    background:#3a2210; border:1px dashed var(--gold); border-radius:8px;
+    padding:14px 18px; color:var(--text-dim); font-size:0.92em; margin-top:16px;
+  }
+
+  .qr-wrap{display:inline-block; transition:transform .25s ease;}
+  .qr-wrap:hover{transform:scale(1.06) rotate(1deg);}
+
+  footer{text-align:center; margin-top:50px; color:var(--text-dim); font-size:0.85em; position:relative; z-index:1;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div id="dice-field"></div>
+
+<header id="hero">
+  <div class="lights" id="lights"></div>
+  <div class="hero-die">
+    <div class="hero-die-inner">
+      <div class="face f1"><div class="pips"><span></span><span></span><span></span><span></span><span class="pip" style="grid-column:2; grid-row:2;"></span><span></span><span></span><span></span><span></span></div></div>
+      <div class="face f2"><div class="pips"><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span><span></span><span></span><span></span><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span></div></div>
+      <div class="face f3"><div class="pips"><span class="pip"></span><span></span><span></span><span></span><span class="pip"></span><span></span><span></span><span></span><span class="pip"></span></div></div>
+      <div class="face f4"><div class="pips"><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span><span></span><span></span><span></span><span></span><span></span><span></span><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span></div></div>
+      <div class="face f5"><div class="pips"><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span><span></span><span class="pip"></span><span></span><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span></div></div>
+      <div class="face f6"><div class="pips"><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span><span class="pip"></span><span></span><span class="pip" style="justify-self:end;"></span></div></div>
+    </div>
+  </div>
+  <img class="logo" src="logo.png" alt="Perya Knights logo">
+  <h1>Perya Knights</h1>
+  <div class="tagline">Isang Gabi sa Perya &middot; Laro &middot; Swerte &middot; Kulit</div>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="https://www.mediafire.com/file/94nsm6jocwlc75x/Perya_Knights_V_2.0.apk/file" target="_blank" rel="noopener">&#128241; Download for Android</a>
+    <a class="btn btn-primary" href="PeryaKnights.zip" download>&#128187; Download for PC</a>
+    <a class="btn btn-secondary" href="#how-to-run">How to Run</a>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>Game Description</h2>
+    <div class="card tilt">
+      <p>PERYA KNIGHTS is a dice arcade game made in Python and Pygame, built around the booth games you'd actually see at a Philippine perya. There are seven modes total. Some are straight up betting games like Color Game and Baccarat, and some are party modes you play with friends for free with no credits involved. Every round uses the same six dice dropped into a 3D tumbler machine, so whether you're betting against the house or going head to head with another player, it's still the same roll deciding everything. Your credits, win streaks, and past rounds all carry over while you play, so it never really resets until you want to.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Game Concept</h2>
+    <div class="card tilt">
+      <p>It started out as a plain dice rolling game, roll, see the number, move on. The enhancement was turning that into an actual perya experience. Same six dice, same tumbler, but now every mode has its own identity, from Color Game and Baccarat as the classic betting rounds to MA IBA TAYA, HULING TATAYO, and SABONG NG DAIS as the group party modes. Building seven modes off one shared dice engine meant the core roll had to be completely fair no matter which game was running on top of it. The Knights part just comes from framing each round like a duel instead of a plain bet. Makes losing sting a little less when it's a joust and not just bad luck.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>&#127482;&#127469; Filipino Theme</h2>
+    <div class="card tilt">
+      <p>Perya booths are everywhere during fiestas and school fairs back home. Dice and color betting stalls, someone yelling out the odds, small bets but a big crowd around it. That's the actual heart of this game, the six colored dice, the tumbler, the shouting when someone wins. PERYA KNIGHTS just takes that booth energy and dresses it up like a small tournament, so a round of Baccarat or a match of SABONG NG DAIS feels like a contest instead of just gambling.</p>
+      <div class="modes">
+        <div class="mode"><b>COLOR GAME</b><span>Color Royale &mdash; bet a colour + number</span></div>
+        <div class="mode"><b>BACCARAT</b><span>Over / Under &mdash; bet the total of the dice</span></div>
+        <div class="mode"><b>SWERTRES</b><span>Lucky Three &mdash; three dice are yours, paid per hit</span></div>
+        <div class="mode"><b>BEAT THE HOUSE</b><span>Beat the House &mdash; you vs. the machine</span></div>
+        <div class="mode"><b>MA-IBA TAYA</b><span>Consequence Pool &mdash; lowest roll does the dare</span></div>
+        <div class="mode"><b>HULING TATAYO</b><span>Battle Royale &mdash; last player standing</span></div>
+        <div class="mode"><b>SABONG NG DAIS</b><span>Arcade Duel &mdash; two players, highest total wins</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Screenshots</h2>
+    <div class="card">
+      <div class="gallery">
+        <img class="screenshot" src="shot1.jpg" alt="Perya Knights main menu screenshot">
+        <img class="screenshot" src="shot3.jpg" alt="Perya Knights Color Game gameplay screenshot">
+        <img class="screenshot" src="shot2.jpg" alt="Perya Knights how to play screenshot">
+      </div>
+    </div>
+  </section>
+
+  <section id="how-to-run">
+    <h2>Play / Access</h2>
+    <div class="card tilt">
+      <p>Perya Knights is built with Python + Pygame and doesn't run directly in a browser, but it's playable both on Android and on PC.</p>
+
+      <p><b>&#128241; On Android</b></p>
+      <ol>
+        <li>Download <b>Perya_Knights_V_2.0.apk</b> (button above) to your phone.</li>
+        <li>Allow "install from unknown sources" if prompted, then open the APK to install.</li>
+        <li>Launch Perya Knights from your app drawer and play.</li>
+      </ol>
+      <div class="note">An older build, <a href="https://www.mediafire.com/file/rovcs10h9mo1sll/Perya_Knights_V_1.0.apk/file" target="_blank" rel="noopener">Perya_Knights_V_1.0.apk</a>, is also available if you need it for comparison.</div>
+
+      <p style="margin-top:22px;"><b>&#128187; On PC</b></p>
+      <ol>
+        <li>Download and unzip <b>PeryaKnights.zip</b> (button above).</li>
+        <li>Make sure Python 3.11+ is installed, then install Pygame:<br><code>pip install pygame</code></li>
+        <li>Open a terminal inside the <code>PeryaKnights</code> folder and run:<br><code>python main.py</code></li>
+      </ol>
+      <div class="note">Controls: mouse for everything, <b>F11</b> for fullscreen, <b>H</b> for how-to-play, <b>SPACE</b> to roll / play again, <b>ESC</b> to go back.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Developer Information</h2>
+    <div class="card tilt">
+      <table class="dev">
+        <tr><td>Name/s</td><td>TESADO and FRIENDS</td></tr>
+        <tr><td>Course</td><td>BSIT</td></tr>
+        <tr><td>Section</td><td>1-B</td></tr>
+        <tr><td>School</td><td>St. Francis Xavier College</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Scan to Visit</h2>
+    <div class="card" style="text-align:center;">
+      <div class="qr-wrap">
+        <img src="qr.png" alt="QR code to Perya Knights" style="width:180px; height:180px; border-radius:10px; border:3px solid var(--line); display:block;">
+      </div>
+      <p style="color:var(--text-dim); margin-top:10px; font-size:0.9em;">Scan to open this page</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>PERYA KNIGHTS &mdash; a Python Game Enhancement Project</footer>
+
+<script>
+(function(){
+  // ---------- build floating dice field ----------
+  var field = document.getElementById('dice-field');
+  var COUNT = window.innerWidth < 700 ? 8 : 14;
+  function makeDie(){
+    var wrap = document.createElement('div');
+    wrap.className = 'fdie';
+    var size = 22 + Math.random()*26;
+    wrap.style.width = size+'px';
+    wrap.style.height = size+'px';
+    wrap.style.left = (Math.random()*100)+'vw';
+    var dur = 14 + Math.random()*18;
+    wrap.style.animationDuration = dur+'s, '+(6+Math.random()*8)+'s';
+    wrap.style.animationDelay = (-Math.random()*dur)+'s, '+(-Math.random()*10)+'s';
+    wrap.style.setProperty('--drift', (Math.random()*160-80)+'px');
+    wrap.style.opacity = (0.25 + Math.random()*0.35).toFixed(2);
+
+    var half = size/2;
+    var inner = document.createElement('div');
+    inner.className = 'fdie-inner';
+    ['f1','f2','f3','f4','f5','f6'].forEach(function(f){
+      var face = document.createElement('div');
+      face.className = 'face '+f;
+      var pip = document.createElement('div');
+      pip.className = 'pip';
+      face.appendChild(pip);
+      inner.appendChild(face);
+    });
+    // recompute translateZ to match this die's half-size via inline transform override
+    Array.prototype.forEach.call(inner.children, function(face, i){
+      var t = '';
+      if(i===0) t='translateZ('+half+'px)';
+      if(i===1) t='rotateY(180deg) translateZ('+half+'px)';
+      if(i===2) t='rotateY(90deg) translateZ('+half+'px)';
+      if(i===3) t='rotateY(-90deg) translateZ('+half+'px)';
+      if(i===4) t='rotateX(90deg) translateZ('+half+'px)';
+      if(i===5) t='rotateX(-90deg) translateZ('+half+'px)';
+      face.style.transform = t;
+    });
+    wrap.appendChild(inner);
+    return wrap;
+  }
+  for(var i=0;i<COUNT;i++){ field.appendChild(makeDie()); }
+
+  // ---------- twinkle lights along header ----------
+  var lights = document.getElementById('lights');
+  for(var j=0;j<28;j++){
+    var s = document.createElement('span');
+    s.style.animationDelay = (Math.random()*1.6)+'s';
+    lights.appendChild(s);
+  }
+
+  // ---------- scroll reveal ----------
+  var sections = document.querySelectorAll('section');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.12});
+    sections.forEach(function(s){ io.observe(s); });
+  } else {
+    sections.forEach(function(s){ s.classList.add('in'); });
+  }
+
+  // ---------- 3D tilt on cards ----------
+  var tilts = document.querySelectorAll('.tilt');
+  tilts.forEach(function(card){
+    card.style.transformStyle = 'preserve-3d';
+    card.addEventListener('mousemove', function(e){
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX - r.left)/r.width - 0.5;
+      var y = (e.clientY - r.top)/r.height - 0.5;
+      card.style.transform = 'perspective(700px) rotateY('+(x*6)+'deg) rotateX('+(-y*6)+'deg) translateY(-2px)';
+    });
+    card.addEventListener('mouseleave', function(){
+      card.style.transform = 'perspective(700px) rotateY(0) rotateX(0)';
+    });
+  });
+
+  // ---------- hero logo parallax on pointer ----------
+  var hero = document.getElementById('hero');
+  var logo = hero.querySelector('.logo');
+  hero.addEventListener('mousemove', function(e){
+    var r = hero.getBoundingClientRect();
+    var x = (e.clientX - r.left)/r.width - 0.5;
+    var y = (e.clientY - r.top)/r.height - 0.5;
+    logo.style.transform = 'translate('+(x*10)+'px,'+(y*10)+'px)';
+  });
+  hero.addEventListener('mouseleave', function(){ logo.style.transform=''; });
+})();
+</script>
+
+</body>
+</html>
