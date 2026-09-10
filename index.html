@@ -4,20 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Perya Knights</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Baloo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1a0f08; --bg2:#2b1710; --panel:#241209ee;
-    --gold:#f5a623; --gold-bright:#ffc857; --pink:#e8547b;
+    --bg:#160c07; --bg2:#2b1710; --panel:#241209ee;
+    --gold:#f5a623; --gold-bright:#ffc857; --pink:#e8547b; --teal:#3fd0c9;
     --text:#f5ead9; --text-dim:#c9b7a3; --line:#5a3a22;
+    --font-display:'Cinzel', 'Trebuchet MS', serif;
+    --font-body:'Baloo 2', 'Trebuchet MS', 'Segoe UI', sans-serif;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
+  ::selection{background:var(--gold); color:#2b1710;}
+  ::-webkit-scrollbar{width:11px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold-bright),var(--gold)); border-radius:6px; border:2px solid var(--bg);}
   body{
     margin:0; overflow-x:hidden; position:relative;
-    background:radial-gradient(ellipse at top, #3a1f12 0%, var(--bg) 60%);
-    color:var(--text); font-family:'Trebuchet MS', 'Segoe UI', sans-serif;
-    line-height:1.6;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, #4a2814 0%, transparent 60%),
+      radial-gradient(ellipse at top, #3a1f12 0%, var(--bg) 60%);
+    color:var(--text); font-family:var(--font-body);
+    line-height:1.65; font-size:16px;
   }
+  p{color:var(--text-dim);}
 
   /* ---------- floating dice background layer ---------- */
   #dice-field{
@@ -61,9 +73,16 @@
 
   /* ---------- header / hero ---------- */
   header{
-    position:relative; text-align:center; padding:56px 20px 32px; overflow:hidden;
+    position:relative; text-align:center; padding:64px 20px 40px; overflow:hidden;
     border-bottom:3px solid var(--line);
-    background:linear-gradient(180deg, #2b1710 0%, transparent 100%);
+    background:
+      repeating-linear-gradient(115deg, #ffffff05 0px, #ffffff05 2px, transparent 2px, transparent 46px),
+      linear-gradient(180deg, #3a2010 0%, #2b1710 40%, transparent 100%);
+  }
+  header::before{
+    content:""; position:absolute; top:-20%; left:50%; width:640px; height:640px;
+    transform:translateX(-50%); border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, #f5a62333 0%, transparent 65%);
   }
   .lights{
     position:absolute; top:0; left:0; right:0; height:6px; display:flex; justify-content:space-around;
@@ -114,20 +133,26 @@
   }
 
   h1{
-    font-size:2.6em; margin:20px 0 6px; letter-spacing:2px;
+    font-family:var(--font-display); font-weight:900;
+    font-size:3.1em; margin:22px 0 8px; letter-spacing:3px;
     color:var(--gold-bright); text-transform:uppercase;
     animation:glowPulse 3s ease-in-out infinite;
   }
   @keyframes glowPulse{
     0%,100%{text-shadow:0 0 14px #f5a62366, 0 0 2px #fff2;}
-    50%{text-shadow:0 0 30px #f5a623cc, 0 0 10px #ffc85799;}
+    50%{text-shadow:0 0 34px #f5a623cc, 0 0 12px #ffc85799;}
   }
-  .tagline{color:var(--pink); letter-spacing:3px; font-size:0.95em; text-transform:uppercase;}
+  .tagline{
+    position:relative; display:inline-flex; align-items:center; gap:10px;
+    color:var(--pink); letter-spacing:3px; font-size:0.9em; text-transform:uppercase; font-weight:600;
+  }
+  .tagline::before, .tagline::after{content:"\2726"; color:var(--gold); font-size:0.8em; opacity:0.8;}
 
-  .cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:26px;}
+  .cta-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:30px;}
   .btn{
-    position:relative; overflow:hidden; display:inline-block; padding:14px 30px; border-radius:8px;
-    font-weight:bold; text-decoration:none; letter-spacing:1px; font-size:1em; border:2px solid transparent;
+    position:relative; overflow:hidden; display:inline-block; padding:15px 32px; border-radius:10px;
+    font-family:var(--font-body); font-weight:700; text-decoration:none; letter-spacing:0.5px; font-size:1em;
+    border:2px solid transparent;
     transition:transform .18s ease, box-shadow .18s ease;
   }
   .btn::after{
@@ -136,23 +161,37 @@
     transform:skewX(-20deg); transition:left .5s ease;
   }
   .btn:hover::after{left:130%;}
-  .btn:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 8px 20px #00000055;}
+  .btn:hover{transform:translateY(-3px) scale(1.03); box-shadow:0 10px 26px #00000066;}
   .btn:active{transform:translateY(0) scale(0.98);}
-  .btn-primary{background:linear-gradient(180deg,var(--gold-bright),var(--gold)); color:#2b1710;}
-  .btn-secondary{background:transparent; border-color:var(--gold); color:var(--gold-bright);}
+  .btn-primary{background:linear-gradient(180deg,var(--gold-bright),var(--gold)); color:#2b1710; box-shadow:0 4px 14px #f5a62344;}
+  .btn-secondary{background:#ffffff08; border-color:var(--gold); color:var(--gold-bright);}
 
   /* ---------- sections / reveal ---------- */
-  section{margin-top:44px; opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease;}
+  section{margin-top:56px; opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease;}
   section.in{opacity:1; transform:translateY(0);}
   h2{
-    color:var(--gold-bright); text-transform:uppercase; letter-spacing:2px; font-size:1.2em;
-    border-left:4px solid var(--pink); padding-left:12px; margin-bottom:14px;
+    font-family:var(--font-display); font-weight:700;
+    display:flex; align-items:center; gap:12px;
+    color:var(--gold-bright); text-transform:uppercase; letter-spacing:2px; font-size:1.25em;
+    margin-bottom:16px;
+  }
+  h2::before{
+    content:""; flex:0 0 auto; width:10px; height:10px; border-radius:2px; transform:rotate(45deg);
+    background:linear-gradient(135deg,var(--pink),var(--gold-bright));
+    box-shadow:0 0 10px #e8547b88;
+  }
+  h2::after{
+    content:""; flex:1 1 auto; height:2px; margin-left:6px;
+    background:linear-gradient(90deg, var(--line), transparent);
   }
   .card{
-    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:26px;
-    transition:transform .2s ease, box-shadow .2s ease; will-change:transform;
+    position:relative; background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:28px;
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; will-change:transform;
+    box-shadow:0 4px 18px #00000044, inset 0 1px 0 #ffffff0a;
   }
-  .card:hover{box-shadow:0 14px 34px #00000066;}
+  .card:hover{box-shadow:0 16px 38px #00000066; border-color:#7a5228;}
+  .card p:last-child{margin-bottom:0;}
+  .card p{color:var(--text-dim);}
 
   .gallery{display:grid; grid-template-columns:1fr; gap:16px;}
   .screenshot{
@@ -161,28 +200,220 @@
   }
   .screenshot:hover{transform:scale(1.02) translateY(-4px); box-shadow:0 16px 40px #000000aa;}
 
-  .modes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:14px;}
+  .modes{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:18px;}
   .mode{
-    background:#2b1710; border:1px solid var(--line); border-radius:8px; padding:12px 16px;
-    transition:transform .2s ease, border-color .2s ease, background .2s ease;
+    position:relative; background:#2b1710; border:1px solid var(--line); border-left:4px solid var(--accent,var(--gold));
+    border-radius:8px; padding:12px 16px 12px 18px;
+    transition:transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
   }
-  .mode:hover{transform:translateY(-4px); border-color:var(--gold-bright); background:#3a2410;}
-  .mode b{color:var(--gold-bright);}
-  .mode span{display:block; color:var(--text-dim); font-size:0.9em; margin-top:2px;}
+  .mode:hover{transform:translateY(-4px) translateX(2px); background:#3a2410; box-shadow:0 8px 20px #00000055, 0 0 0 1px var(--accent,var(--gold-bright));}
+  .mode b{color:var(--gold-bright); font-family:var(--font-display); letter-spacing:0.5px;}
+  .mode span{display:block; color:var(--text-dim); font-size:0.9em; margin-top:3px;}
 
   table.dev{width:100%; border-collapse:collapse;}
-  table.dev td{padding:8px 6px; border-bottom:1px solid var(--line);}
-  table.dev td:first-child{color:var(--text-dim); width:140px;}
+  table.dev tr{transition:background .2s ease;}
+  table.dev tr:hover{background:#ffffff08;}
+  table.dev td{padding:11px 8px; border-bottom:1px solid var(--line); vertical-align:top;}
+  table.dev tr:last-child td{border-bottom:none;}
+  table.dev td:first-child{color:var(--gold-bright); width:160px; font-weight:600; letter-spacing:0.3px;}
 
   .note{
     background:#3a2210; border:1px dashed var(--gold); border-radius:8px;
     padding:14px 18px; color:var(--text-dim); font-size:0.92em; margin-top:16px;
+    display:flex; align-items:flex-start; gap:10px;
+    position:relative; overflow:hidden;
+    animation:noteGlow 4s ease-in-out infinite;
+  }
+  .note .note-ic{flex:none; font-size:1.2em; line-height:1; margin-top:1px; filter:drop-shadow(0 0 4px #00000055);}
+  .note a{color:var(--gold-bright); font-weight:600; text-decoration:underline; text-decoration-color:#ffd76a66; text-underline-offset:2px; transition:color .2s ease, text-decoration-color .2s ease;}
+  .note a:hover{color:#fff; text-decoration-color:#fff;}
+  .note::after{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(120deg, transparent 30%, #ffd76a22 50%, transparent 70%);
+    background-size:220% 220%; animation:noteSheen 5s linear infinite;
+  }
+  @keyframes noteGlow{
+    0%,100%{ box-shadow:0 0 0 rgba(255,199,74,0); border-color:var(--gold); }
+    50%{ box-shadow:0 0 14px rgba(255,199,74,0.25); border-color:var(--gold-bright); }
+  }
+  @keyframes noteSheen{
+    0%{ background-position:-120% -120%; }
+    100%{ background-position:120% 120%; }
   }
 
   .qr-wrap{display:inline-block; transition:transform .25s ease;}
   .qr-wrap:hover{transform:scale(1.06) rotate(1deg);}
 
-  footer{text-align:center; margin-top:50px; color:var(--text-dim); font-size:0.85em; position:relative; z-index:1;}
+  footer{
+    text-align:center; margin-top:60px; padding-top:26px; color:var(--text-dim); font-size:0.85em;
+    position:relative; z-index:1; border-top:1px solid var(--line);
+  }
+  footer .fdots{display:flex; justify-content:center; gap:8px; margin-bottom:14px;}
+  footer .fdots span{width:6px; height:6px; border-radius:50%; background:var(--gold); opacity:0.6;}
+  footer .fdots span:nth-child(2){background:var(--pink);}
+  footer .fdots span:nth-child(3){background:var(--teal);}
+
+  /* ---------- top nav bar ---------- */
+  #topnav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 22px; background:#150b05dd; backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    transform:translateY(-100%); transition:transform .35s ease, background .3s ease;
+  }
+  #topnav.show{transform:translateY(0);}
+  #topnav .brand{display:flex; align-items:center; gap:10px; color:var(--gold-bright); font-family:var(--font-display); font-weight:700; letter-spacing:1px; text-transform:uppercase; font-size:0.95em;}
+  #topnav .brand img{width:30px; height:30px; border-radius:50%; border:2px solid var(--gold);}
+  #topnav nav{display:flex; align-items:center; gap:4px; position:relative;}
+  #topnav a.navlink{
+    color:var(--text-dim); text-decoration:none; font-size:0.85em; letter-spacing:0.5px;
+    padding:8px 12px; border-radius:6px; transition:color .2s ease, background .2s ease;
+    white-space:nowrap;
+  }
+  #topnav a.navlink:hover{color:var(--gold-bright); background:#ffffff0d;}
+  #topnav a.navlink.active{color:var(--gold-bright); font-weight:bold;}
+  #navToggle{
+    display:none; background:none; border:1px solid var(--gold); color:var(--gold-bright);
+    font-size:1.2em; padding:6px 10px; border-radius:6px; cursor:pointer;
+  }
+  @media (max-width:820px){
+    #topnav nav{
+      position:absolute; top:100%; right:0; left:0; flex-direction:column; align-items:stretch;
+      background:#150b05f5; border-bottom:1px solid var(--line);
+      max-height:0; overflow:hidden; transition:max-height .3s ease;
+    }
+    #topnav nav.open{max-height:400px;}
+    #topnav a.navlink{padding:14px 22px; border-radius:0; text-align:center;}
+    #navToggle{display:inline-block;}
+  }
+
+  /* ---------- scroll progress bar ---------- */
+  #scrollbar{
+    position:fixed; top:0; left:0; height:3px; width:0%; z-index:60;
+    background:linear-gradient(90deg,var(--pink),var(--gold-bright)); transition:width .1s linear;
+  }
+
+  /* ---------- back to top ---------- */
+  #toTop{
+    position:fixed; right:20px; bottom:20px; z-index:50; width:46px; height:46px; border-radius:50%;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold)); color:#2b1710; border:none;
+    font-size:1.2em; cursor:pointer; box-shadow:0 6px 18px #00000066;
+    opacity:0; transform:translateY(16px) scale(0.8); pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+  }
+  #toTop.show{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+  #toTop:hover{filter:brightness(1.08); transform:translateY(-3px) scale(1.05);}
+
+  /* ---------- loading intro ---------- */
+  #intro{
+    position:fixed; inset:0; z-index:200; background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .6s ease, visibility .6s ease;
+  }
+  #intro.hide{opacity:0; visibility:hidden; pointer-events:none;}
+  #intro .idie{width:64px; height:64px; perspective:600px;}
+  #intro .idie-inner{
+    width:100%; height:100%; position:relative; transform-style:preserve-3d;
+    animation:introSpin 1s ease-in-out infinite;
+  }
+  #intro .face{
+    position:absolute; inset:0; background:linear-gradient(145deg,#ffdf91,#f5a623);
+    border:2px solid #7a4c14; border-radius:10px;
+  }
+  #intro .f1{transform:translateZ(32px);} #intro .f2{transform:rotateY(180deg) translateZ(32px);}
+  #intro .f3{transform:rotateY(90deg) translateZ(32px);} #intro .f4{transform:rotateY(-90deg) translateZ(32px);}
+  #intro .f5{transform:rotateX(90deg) translateZ(32px);} #intro .f6{transform:rotateX(-90deg) translateZ(32px);}
+  @keyframes introSpin{
+    0%{transform:rotateX(0) rotateY(0) scale(1);}
+    50%{transform:rotateX(180deg) rotateY(180deg) scale(1.15);}
+    100%{transform:rotateX(360deg) rotateY(360deg) scale(1);}
+  }
+
+  /* ---------- stats bar ---------- */
+  .stats-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:28px;}
+  .stat-pill{
+    background:#ffffff0a; border:1px solid var(--line); border-radius:30px; padding:10px 20px;
+    display:flex; align-items:baseline; gap:6px; backdrop-filter:blur(4px);
+    transition:transform .2s ease, border-color .2s ease;
+  }
+  .stat-pill:hover{transform:translateY(-3px); border-color:var(--gold);}
+  .stat-pill .num{font-family:var(--font-display); font-weight:900; color:var(--gold-bright); font-size:1.3em;}
+  .stat-pill .lbl{color:var(--text-dim); font-size:0.78em; text-transform:uppercase; letter-spacing:1px;}
+
+  /* ---------- staggered card/mode/screenshot entrance ---------- */
+  .modes .mode, .gallery .shot-wrap{
+    opacity:0; transform:translateY(18px); transition:opacity .5s ease, transform .5s ease;
+  }
+  section.in .modes .mode, section.in .gallery .shot-wrap{opacity:1; transform:translateY(0);}
+  section.in .modes .mode:nth-child(1){transition-delay:.05s;}
+  section.in .modes .mode:nth-child(2){transition-delay:.1s;}
+  section.in .modes .mode:nth-child(3){transition-delay:.15s;}
+  section.in .modes .mode:nth-child(4){transition-delay:.2s;}
+  section.in .modes .mode:nth-child(5){transition-delay:.25s;}
+  section.in .modes .mode:nth-child(6){transition-delay:.3s;}
+  section.in .modes .mode:nth-child(7){transition-delay:.35s;}
+  section.in .gallery .shot-wrap:nth-child(1){transition-delay:.05s;}
+  section.in .gallery .shot-wrap:nth-child(2){transition-delay:.15s;}
+  section.in .gallery .shot-wrap:nth-child(3){transition-delay:.25s;}
+
+  /* ---------- screenshot lightbox ---------- */
+  .shot-wrap{cursor:zoom-in; position:relative; overflow:hidden; border-radius:10px;}
+  .shot-wrap::after{
+    content:"\1F50D  View"; position:absolute; inset:auto 0 0 0; padding:8px; text-align:center;
+    background:linear-gradient(0deg,#000000cc,transparent); color:#fff; font-size:0.8em;
+    opacity:0; transform:translateY(8px); transition:opacity .2s ease, transform .2s ease;
+  }
+  .shot-wrap:hover::after{opacity:1; transform:translateY(0);}
+  .shot-wrap:hover .screenshot{transform:scale(1.04);}
+
+  #lightbox{
+    position:fixed; inset:0; z-index:150; background:#0a0503ee; backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; padding:40px;
+    opacity:0; visibility:hidden; transition:opacity .3s ease, visibility .3s ease;
+  }
+  #lightbox.show{opacity:1; visibility:visible;}
+  #lightbox img{
+    max-width:100%; max-height:100%; border-radius:10px; border:3px solid var(--gold);
+    box-shadow:0 20px 60px #000000aa; transform:scale(0.92); transition:transform .3s ease;
+  }
+  #lightbox.show img{transform:scale(1);}
+  #lightbox .lb-close{
+    position:absolute; top:20px; right:26px; background:none; border:none; color:var(--gold-bright);
+    font-size:2em; cursor:pointer; line-height:1;
+  }
+  #lightbox .lb-arrow{
+    position:absolute; top:50%; transform:translateY(-50%); background:#00000066; border:1px solid var(--gold);
+    color:var(--gold-bright); width:44px; height:44px; border-radius:50%; font-size:1.3em; cursor:pointer;
+    transition:background .2s ease;
+  }
+  #lightbox .lb-arrow:hover{background:#f5a62333;}
+  #lightbox .lb-prev{left:20px;} #lightbox .lb-next{right:20px;}
+
+  /* ---------- play/access tabs ---------- */
+  .tabbar{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+  .tabbtn{
+    flex:1 1 auto; min-width:140px; background:#2b1710; border:1px solid var(--line); color:var(--text-dim);
+    padding:12px 16px; border-radius:9px; cursor:pointer; font-family:var(--font-body); font-weight:600;
+    font-size:0.95em; transition:background .2s ease, color .2s ease, border-color .2s ease, transform .15s ease;
+  }
+  .tabbtn:hover{transform:translateY(-2px); border-color:var(--gold);}
+  .tabbtn.active{background:linear-gradient(180deg,var(--gold-bright),var(--gold)); color:#2b1710; border-color:transparent;}
+  .tabpanel{display:none; animation:fadeIn .35s ease;}
+  .tabpanel.active{display:block;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- button ripple ---------- */
+  .btn .ripple{
+    position:absolute; border-radius:50%; background:#ffffff55; transform:scale(0); pointer-events:none;
+    animation:rippleAnim .6s ease-out;
+  }
+  @keyframes rippleAnim{to{transform:scale(2.6); opacity:0;}}
+
+  /* ---------- sliding nav indicator ---------- */
+  #navIndicator{
+    position:absolute; bottom:2px; height:3px; border-radius:3px; background:linear-gradient(90deg,var(--pink),var(--gold-bright));
+    transition:left .3s ease, width .3s ease; opacity:0;
+  }
 
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important; transition:none !important;}
@@ -191,7 +422,33 @@
 </head>
 <body>
 
+<div id="intro">
+  <div class="idie">
+    <div class="idie-inner">
+      <div class="face f1"></div><div class="face f2"></div><div class="face f3"></div>
+      <div class="face f4"></div><div class="face f5"></div><div class="face f6"></div>
+    </div>
+  </div>
+</div>
+
 <div id="dice-field"></div>
+<div id="scrollbar"></div>
+
+<div id="topnav">
+  <div class="brand"><img src="logo.png" alt=""> Perya Knights</div>
+  <button id="navToggle" aria-label="Toggle menu">&#9776;</button>
+  <nav id="navLinks">
+    <a class="navlink" href="#description">Description</a>
+    <a class="navlink" href="#concept">Concept</a>
+    <a class="navlink" href="#theme">Theme</a>
+    <a class="navlink" href="#screenshots">Screenshots</a>
+    <a class="navlink" href="#how-to-run">Play</a>
+    <a class="navlink" href="#developers">Team</a>
+    <a class="navlink" href="#scan">Scan</a>
+  </nav>
+</div>
+
+<button id="toTop" title="Back to top">&#8593;</button>
 
 <header id="hero">
   <div class="lights" id="lights"></div>
@@ -210,50 +467,55 @@
   <div class="tagline">Isang Gabi sa Perya &middot; Laro &middot; Swerte &middot; Kulit</div>
   <div class="cta-row">
     <a class="btn btn-primary" href="https://www.mediafire.com/file/94nsm6jocwlc75x/Perya_Knights_V_2.0.apk/file" target="_blank" rel="noopener">&#128241; Download for Android</a>
-    <a class="btn btn-primary" href="PeryaKnights.zip" download>&#128187; Download for PC</a>
+    <a class="btn btn-primary" href="PeryaKnights.exe" download>&#128187; Download for PC</a>
     <a class="btn btn-secondary" href="#how-to-run">How to Run</a>
+  </div>
+  <div class="stats-row">
+    <div class="stat-pill"><span class="num" data-count="7">0</span><span class="lbl">Game Modes</span></div>
+    <div class="stat-pill"><span class="num" data-count="6">0</span><span class="lbl">Dice</span></div>
+    <div class="stat-pill"><span class="num">2</span><span class="lbl">Platforms</span></div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <section>
+  <section id="description">
     <h2>Game Description</h2>
     <div class="card tilt">
       <p>PERYA KNIGHTS is a dice arcade game made in Python and Pygame, built around the booth games you'd actually see at a Philippine perya. There are seven modes total. Some are straight up betting games like Color Game and Baccarat, and some are party modes you play with friends for free with no credits involved. Every round uses the same six dice dropped into a 3D tumbler machine, so whether you're betting against the house or going head to head with another player, it's still the same roll deciding everything. Your credits, win streaks, and past rounds all carry over while you play, so it never really resets until you want to.</p>
     </div>
   </section>
 
-  <section>
+  <section id="concept">
     <h2>Game Concept</h2>
     <div class="card tilt">
       <p>It started out as a plain dice rolling game, roll, see the number, move on. The enhancement was turning that into an actual perya experience. Same six dice, same tumbler, but now every mode has its own identity, from Color Game and Baccarat as the classic betting rounds to MA IBA TAYA, HULING TATAYO, and SABONG NG DAIS as the group party modes. Building seven modes off one shared dice engine meant the core roll had to be completely fair no matter which game was running on top of it. The Knights part just comes from framing each round like a duel instead of a plain bet. Makes losing sting a little less when it's a joust and not just bad luck.</p>
     </div>
   </section>
 
-  <section>
+  <section id="theme">
     <h2>&#127482;&#127469; Filipino Theme</h2>
     <div class="card tilt">
       <p>Perya booths are everywhere during fiestas and school fairs back home. Dice and color betting stalls, someone yelling out the odds, small bets but a big crowd around it. That's the actual heart of this game, the six colored dice, the tumbler, the shouting when someone wins. PERYA KNIGHTS just takes that booth energy and dresses it up like a small tournament, so a round of Baccarat or a match of SABONG NG DAIS feels like a contest instead of just gambling.</p>
       <div class="modes">
-        <div class="mode"><b>COLOR GAME</b><span>Color Royale &mdash; bet a colour + number</span></div>
-        <div class="mode"><b>BACCARAT</b><span>Over / Under &mdash; bet the total of the dice</span></div>
-        <div class="mode"><b>SWERTRES</b><span>Lucky Three &mdash; three dice are yours, paid per hit</span></div>
-        <div class="mode"><b>BEAT THE HOUSE</b><span>Beat the House &mdash; you vs. the machine</span></div>
-        <div class="mode"><b>MA-IBA TAYA</b><span>Consequence Pool &mdash; lowest roll does the dare</span></div>
-        <div class="mode"><b>HULING TATAYO</b><span>Battle Royale &mdash; last player standing</span></div>
-        <div class="mode"><b>SABONG NG DAIS</b><span>Arcade Duel &mdash; two players, highest total wins</span></div>
+        <div class="mode" style="--accent:#e14b4b;"><b>Kulay Suwerte</b><span>Color Royale &mdash; bet a colour + number</span></div>
+        <div class="mode" style="--accent:#4b8ee1;"><b>Taas o Baba</b><span>Over / Under &mdash; bet the total of the dice</span></div>
+        <div class="mode" style="--accent:#4bc97a;"><b>Swerteng Tatlo</b><span>Lucky Three &mdash; three dice are yours, paid per hit</span></div>
+        <div class="mode" style="--accent:#e1c04b;"><b>Laban sa Bahay</b><span>Beat the House &mdash; you vs. the machine</span></div>
+        <div class="mode" style="--accent:#a25be0;"><b>Parusahan</b><span>Consequence Pool &mdash; lowest roll does the dare</span></div>
+        <div class="mode" style="--accent:#e0895b;"><b>Huling Tatayo</b><span>Battle Royale &mdash; last player standing</span></div>
+        <div class="mode" style="--accent:var(--pink);"><b>Sabong ng Dais</b><span>Arcade Duel &mdash; two players, highest total wins</span></div>
       </div>
     </div>
   </section>
 
-  <section>
+  <section id="screenshots">
     <h2>Screenshots</h2>
     <div class="card">
-      <div class="gallery">
-        <img class="screenshot" src="shot1.jpg" alt="Perya Knights main menu screenshot">
-        <img class="screenshot" src="shot3.jpg" alt="Perya Knights Color Game gameplay screenshot">
-        <img class="screenshot" src="shot2.jpg" alt="Perya Knights how to play screenshot">
+      <div class="gallery" id="gallery">
+        <div class="shot-wrap"><img class="screenshot" src="shot1.jpg" alt="Perya Knights main menu screenshot"></div>
+        <div class="shot-wrap"><img class="screenshot" src="shot3.jpg" alt="Perya Knights Color Game gameplay screenshot"></div>
+        <div class="shot-wrap"><img class="screenshot" src="shot2.jpg" alt="Perya Knights how to play screenshot"></div>
       </div>
     </div>
   </section>
@@ -263,29 +525,38 @@
     <div class="card tilt">
       <p>Perya Knights is built with Python + Pygame and doesn't run directly in a browser, but it's playable both on Android and on PC.</p>
 
-      <p><b>&#128241; On Android</b></p>
-      <ol>
-        <li>Download <b>Perya_Knights_V_2.0.apk</b> (button above) to your phone.</li>
-        <li>Allow "install from unknown sources" if prompted, then open the APK to install.</li>
-        <li>Launch Perya Knights from your app drawer and play.</li>
-      </ol>
-      <div class="note">An older build, <a href="https://www.mediafire.com/file/rovcs10h9mo1sll/Perya_Knights_V_1.0.apk/file" target="_blank" rel="noopener">Perya_Knights_V_1.0.apk</a>, is also available if you need it for comparison.</div>
+      <div class="tabbar">
+        <button class="tabbtn active" data-tab="tab-android">&#128241; On Android</button>
+        <button class="tabbtn" data-tab="tab-pc">&#128187; On PC</button>
+      </div>
 
-      <p style="margin-top:22px;"><b>&#128187; On PC</b></p>
-      <ol>
-        <li>Download and unzip <b>PeryaKnights.zip</b> (button above).</li>
-        <li>Make sure Python 3.11+ is installed, then install Pygame:<br><code>pip install pygame</code></li>
-        <li>Open a terminal inside the <code>PeryaKnights</code> folder and run:<br><code>python main.py</code></li>
-      </ol>
-      <div class="note">Controls: mouse for everything, <b>F11</b> for fullscreen, <b>H</b> for how-to-play, <b>SPACE</b> to roll / play again, <b>ESC</b> to go back.</div>
+      <div class="tabpanel active" id="tab-android">
+        <ol>
+          <li>Download <b>Perya_Knights_V_2.0.apk</b> (button above) to your phone.</li>
+          <li>Allow "install from unknown sources" if prompted, then open the APK to install.</li>
+          <li>Launch Perya Knights from your app drawer and play.</li>
+        </ol>
+        <div class="note"><span class="note-ic">&#128230;</span><span>An older build, <a href="https://www.mediafire.com/file/rovcs10h9mo1sll/Perya_Knights_V_1.0.apk/file" target="_blank" rel="noopener">Perya_Knights_V_1.0.apk</a>, is also available if you need it for comparison.</span></div>
+      </div>
+
+      <div class="tabpanel" id="tab-pc">
+        <ol>
+          <li>Download <b>PeryaKnights.exe</b> (button above).</li>
+          <li>Double-click it to run &mdash; no Python or installation needed, it's a standalone app.</li>
+          <li>If Windows SmartScreen warns you, click "More info" &rarr; "Run anyway" (this just means the app isn't code-signed, not that it's unsafe).</li>
+        </ol>
+        <div class="note"><span class="note-ic">&#127918;</span><span>Controls: mouse for everything, <b>F11</b> for fullscreen, <b>H</b> for how-to-play, <b>SPACE</b> to roll / play again, <b>ESC</b> to go back.</span></div>
+        <div class="note"><span class="note-ic">&#128193;</span><span>Want to see how it's built? <a href="PeryaKnights.zip" download>PeryaKnights.zip</a> has the full Python source code if you'd like to use or read it.</span></div>
+      </div>
     </div>
   </section>
 
-  <section>
+  <section id="developers">
     <h2>Developer Information</h2>
     <div class="card tilt">
       <table class="dev">
-        <tr><td>Name/s</td><td>TESADO and FRIENDS</td></tr>
+        <tr><td>Main Developer</td><td>DEN GYNARD TESADO</td></tr>
+        <tr><td>Members</td><td>HARVEY DUMANIG, RYZEL BOMBITA, KRISTINE BRUGADA, NELMEIR PIA, DANIEL BUICO</td></tr>
         <tr><td>Course</td><td>BSIT</td></tr>
         <tr><td>Section</td><td>1-B</td></tr>
         <tr><td>School</td><td>St. Francis Xavier College</td></tr>
@@ -293,7 +564,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="scan">
     <h2>Scan to Visit</h2>
     <div class="card" style="text-align:center;">
       <div class="qr-wrap">
@@ -305,7 +576,17 @@
 
 </div>
 
-<footer>PERYA KNIGHTS &mdash; a Python Game Enhancement Project</footer>
+<div id="lightbox">
+  <button class="lb-close" aria-label="Close">&times;</button>
+  <button class="lb-arrow lb-prev" aria-label="Previous">&#8249;</button>
+  <img src="" alt="">
+  <button class="lb-arrow lb-next" aria-label="Next">&#8250;</button>
+</div>
+
+<footer>
+  <div class="fdots"><span></span><span></span><span></span></div>
+  PERYA KNIGHTS &mdash; a Python Game Enhancement Project
+</footer>
 
 <script>
 (function(){
@@ -398,6 +679,155 @@
     logo.style.transform = 'translate('+(x*10)+'px,'+(y*10)+'px)';
   });
   hero.addEventListener('mouseleave', function(){ logo.style.transform=''; });
+
+  // ---------- top nav: show on scroll, mobile toggle, active link, progress bar, back-to-top ----------
+  var topnav = document.getElementById('topnav');
+  var scrollbar = document.getElementById('scrollbar');
+  var toTop = document.getElementById('toTop');
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  var heroHeight = hero.offsetHeight;
+
+  navToggle.addEventListener('click', function(){
+    navLinks.classList.toggle('open');
+  });
+  document.querySelectorAll('.navlink').forEach(function(a){
+    a.addEventListener('click', function(){ navLinks.classList.remove('open'); });
+  });
+
+  function onScroll(){
+    var y = window.scrollY || document.documentElement.scrollTop;
+    topnav.classList.toggle('show', y > heroHeight * 0.6);
+    toTop.classList.toggle('show', y > 500);
+    var doc = document.documentElement;
+    var pct = (y / (doc.scrollHeight - doc.clientHeight)) * 100;
+    scrollbar.style.width = (isFinite(pct) ? pct : 0) + '%';
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  toTop.addEventListener('click', function(){
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  var navSections = ['description','concept','theme','screenshots','how-to-run','developers','scan']
+    .map(function(id){ return document.getElementById(id); })
+    .filter(Boolean);
+  if('IntersectionObserver' in window){
+    var navIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          var id = e.target.id;
+          document.querySelectorAll('.navlink').forEach(function(a){
+            a.classList.toggle('active', a.getAttribute('href') === '#'+id);
+          });
+        }
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    navSections.forEach(function(s){ navIo.observe(s); });
+  }
+
+  // ---------- intro splash ----------
+  window.addEventListener('load', function(){
+    setTimeout(function(){
+      document.getElementById('intro').classList.add('hide');
+    }, 700);
+  });
+  // safety net in case 'load' is slow/blocked
+  setTimeout(function(){ document.getElementById('intro').classList.add('hide'); }, 2500);
+
+  // ---------- count-up stats ----------
+  var counted = false;
+  function runCounters(){
+    if(counted) return; counted = true;
+    document.querySelectorAll('.num[data-count]').forEach(function(el){
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      var cur = 0;
+      var step = Math.max(1, Math.round(target/20));
+      var t = setInterval(function(){
+        cur += step;
+        if(cur >= target){ cur = target; clearInterval(t); }
+        el.textContent = cur;
+      }, 40);
+    });
+  }
+  if('IntersectionObserver' in window){
+    var statIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ runCounters(); statIo.disconnect(); } });
+    }, {threshold:0.5});
+    var statsRow = document.querySelector('.stats-row');
+    if(statsRow) statIo.observe(statsRow);
+  } else {
+    runCounters();
+  }
+
+  // ---------- screenshot lightbox ----------
+  var shots = Array.prototype.slice.call(document.querySelectorAll('#gallery .screenshot'));
+  var lightbox = document.getElementById('lightbox');
+  var lbImg = lightbox.querySelector('img');
+  var lbIndex = 0;
+  function openLightbox(i){
+    lbIndex = (i + shots.length) % shots.length;
+    lbImg.src = shots[lbIndex].src;
+    lbImg.alt = shots[lbIndex].alt;
+    lightbox.classList.add('show');
+  }
+  function closeLightbox(){ lightbox.classList.remove('show'); }
+  shots.forEach(function(img, i){
+    img.closest('.shot-wrap').addEventListener('click', function(){ openLightbox(i); });
+  });
+  lightbox.querySelector('.lb-close').addEventListener('click', closeLightbox);
+  lightbox.querySelector('.lb-prev').addEventListener('click', function(){ openLightbox(lbIndex-1); });
+  lightbox.querySelector('.lb-next').addEventListener('click', function(){ openLightbox(lbIndex+1); });
+  lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', function(e){
+    if(!lightbox.classList.contains('show')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') openLightbox(lbIndex-1);
+    if(e.key === 'ArrowRight') openLightbox(lbIndex+1);
+  });
+
+  // ---------- play/access tabs ----------
+  document.querySelectorAll('.tabbtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var group = btn.closest('.card');
+      group.querySelectorAll('.tabbtn').forEach(function(b){ b.classList.remove('active'); });
+      group.querySelectorAll('.tabpanel').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(btn.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+
+  // ---------- button ripple ----------
+  document.querySelectorAll('.btn').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      var r = btn.getBoundingClientRect();
+      var ripple = document.createElement('span');
+      var size = Math.max(r.width, r.height);
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = size+'px';
+      ripple.style.left = (e.clientX - r.left - size/2)+'px';
+      ripple.style.top = (e.clientY - r.top - size/2)+'px';
+      btn.appendChild(ripple);
+      setTimeout(function(){ ripple.remove(); }, 650);
+    });
+  });
+
+  // ---------- sliding nav indicator ----------
+  var navIndicator = document.createElement('div');
+  navIndicator.id = 'navIndicator';
+  navLinks.appendChild(navIndicator);
+  function moveIndicator(){
+    var active = navLinks.querySelector('.navlink.active');
+    if(!active || window.innerWidth <= 820){ navIndicator.style.opacity = 0; return; }
+    navIndicator.style.opacity = 1;
+    navIndicator.style.left = active.offsetLeft + 'px';
+    navIndicator.style.width = active.offsetWidth + 'px';
+  }
+  var indicatorObserver = new MutationObserver(moveIndicator);
+  indicatorObserver.observe(navLinks, {subtree:true, attributes:true, attributeFilter:['class']});
+  window.addEventListener('resize', moveIndicator);
+  setTimeout(moveIndicator, 300);
 })();
 </script>
 
